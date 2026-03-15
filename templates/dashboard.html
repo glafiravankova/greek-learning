@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная - Учим греческий</title>
+    <link rel="icon" type="image/png" href="/static/icons8-штанга-32.png">
+    <link rel="shortcut icon" href="/static/icons8-штанга-32.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="main-header">
+        <h1>
+            <i class="fas fa-language"></i>
+            Учим греческий
+        </h1>
+    </header>
+
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-links">
+                <a href="/dashboard"><i class="fas fa-home"></i> Главная</a>
+                <a href="/practice"><i class="fas fa-dumbbell"></i> Тренировка</a>
+                <a href="/add"><i class="fas fa-plus-circle"></i> Добавить</a>
+                <a href="/dictionary"><i class="fas fa-book"></i> Словарь</a>
+                
+            </div>
+            <a href="/logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+        </div>
+    </nav>
+
+    <main class="content">
+        <h1 class="page-title">
+            <i class="fas fa-olive-branch"></i>
+            Καλημέρα, {{ session.username }}!
+        </h1>
+        
+        <div class="dashboard-grid">
+            <!-- Карточка "Тренироваться" - с иконкой карточек -->
+            <a href="/practice" class="dashboard-card">
+                <div class="card-header">
+                    <i class="fas fa-dumbbell card-icon"></i>
+                </div>
+                <div class="card-content">
+                    <h2>Тренироваться</h2>
+                    <p>Повторяй слова с помощью интервального метода</p>
+                    <span class="card-stats">
+                        <i class="fas fa-layer-group"></i> 
+                        {% if cards_count is defined and cards_count > 0 %}
+                            Карточек: {{ cards_count }}
+                        {% else %}
+                            Карточек: 0
+                        {% endif %}
+                    </span>
+                </div>
+            </a>
+
+            <!-- Карточка "Добавить слова" -->
+            <a href="/add" class="dashboard-card">
+                <div class="card-header">
+                    <i class="fas fa-plus-circle card-icon"></i>
+                </div>
+                <div class="card-content">
+                    <h2>Добавить слова</h2>
+                    <p>Пополни свою коллекцию новыми словами</p>
+                    <span class="card-stats">
+                        <i class="fas fa-pen"></i> Новые слова
+                    </span>
+                </div>
+            </a>
+
+            <!-- Карточка "Словарь" - с иконкой для слов -->
+            <a href="/dictionary" class="dashboard-card">
+                <div class="card-header">
+                    <i class="fas fa-book-open card-icon"></i>
+                </div>
+                <div class="card-content">
+                    <h2>Словарь</h2>
+                    <p>Просмотри все изученные слова</p>
+                    {% if words_count > 0 %}
+                    <span class="card-stats">
+                        <i class="fas fa-font"></i> Слов: {{ words_count }}
+                    </span>
+                    {% else %}
+                    <span class="card-stats">
+                        <i class="fas fa-empty-set"></i> Пока пусто
+                    </span>
+                    {% endif %}
+                </div>
+            </a>
+        </div>
+        
+        <!-- Здесь позже можно добавить виджеты -->
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <p><i class="fas fa-heart" style="color: #ff6b6b;"></i> Μπράβο, ρε.</p>
+        </div>
+    </footer>
+</body>
+</html>

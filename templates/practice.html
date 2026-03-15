@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тренировка - Учим греческий</title>
+    <link rel="icon" type="image/png" href="/static/icons8-штанга-32.png">
+    <link rel="shortcut icon" href="/static/icons8-штанга-32.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .practice-container {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(139, 69, 19, 0.1);
+        }
+        
+        .practice-prompt {
+            font-size: 2rem;
+            color: #8b4513;
+            text-align: center;
+            margin: 2rem 0;
+            padding: 2rem;
+            background: #f9f3ec;
+            border-radius: 12px;
+            font-family: 'Georgia', serif;
+        }
+        
+        .practice-input {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.2rem;
+            border: 2px solid #f0e6d6;
+            border-radius: 8px;
+            margin: 1rem 0;
+            font-family: 'Georgia', serif;
+        }
+        
+        .practice-input:focus {
+            outline: none;
+            border-color: #a05252;
+        }
+        
+        .progress-info {
+            text-align: center;
+            color: #666;
+            margin-top: 1rem;
+            font-style: italic;
+        }
+        
+        .direction-badge {
+            text-align: center;
+            color: #8b4513;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        
+        .note-hint {
+            text-align: center;
+            color: #888;
+            font-size: 0.9rem;
+            margin: 0.5rem 0;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <h1>
+            <i class="fas fa-language"></i>
+            Учим греческий
+        </h1>
+    </header>
+
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-links">
+                <a href="/dashboard"><i class="fas fa-home"></i> Главная</a>
+                <a href="/practice"><i class="fas fa-dumbbell"></i> Тренировка</a>
+                <a href="/add"><i class="fas fa-plus-circle"></i> Добавить</a>
+                <a href="/dictionary"><i class="fas fa-book"></i> Словарь</a>
+            </div>
+            <a href="/logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+        </div>
+    </nav>
+
+    <main class="content">
+        {% if no_words %}
+            <div class="practice-container" style="text-align: center;">
+                <i class="fas fa-check-circle" style="font-size: 4rem; color: #a05252; margin-bottom: 1rem;"></i>
+                <h2>На сегодня все!</h2>
+                <p style="margin: 1rem 0; color: #666;">На сегодня нет слов для повторения. Отдохни или добавь новые слова.</p>
+                <a href="/dashboard" class="btn btn-secondary" style="margin-left: 1rem;">На главную</a>
+            </div>
+        {% else %}
+            <div class="practice-container">
+                <div class="direction-badge">
+                    {% if direction == 'term_to_def' %}
+                        Ελληνικά - Русский
+                    {% else %}
+                        Русский - Ελληνικά
+                    {% endif %}
+                </div>
+                
+                <div class="practice-prompt">
+                    {% if direction == 'term_to_def' %}
+                        {{ card.term }}
+                    {% else %}
+                        {{ card.definition }}
+                    {% endif %}
+                </div>
+                
+                <form action="/check_answer" method="post">
+                    <input type="text" 
+                           name="answer" 
+                           class="practice-input" 
+                           placeholder="Твой ответ..." 
+                           autofocus 
+                           required>
+                    <div style="display: flex; gap: 1rem;">
+                        <button type="submit" class="btn" style="flex: 2;">Проверить</button>
+                        <button type="submit" formaction="/skip_word" class="btn btn-secondary" style="flex: 1;">Пропустить</button>
+                    </div>
+                </form>
+                
+                
+                
+                <div class="progress-info">
+                    Осталось карточек: {{ total_cards }}
+                </div>
+            </div>
+        {% endif %}
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <p><i class="fas fa-heart" style="color: #ff6b6b;"></i> Μπράβο, ρε.</p>
+        </div>
+    </footer>
+</body>
+</html>

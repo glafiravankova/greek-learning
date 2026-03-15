@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Словарь - Учим греческий</title>
+    <link rel="icon" type="image/png" href="/static/icons8-штанга-32.png">
+    <link rel="shortcut icon" href="/static/icons8-штанга-32.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+        .edit-btn {
+            background: none;
+            border: none;
+            color: #8b4513;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 5px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        .edit-btn:hover {
+            background: #f0e6d6;
+            color: #a05252;
+            transform: scale(1.1);
+        }
+        .date-cell {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        /* Стили для модального окна */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: #fffaf7;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 30px rgba(139,69,19,0.3);
+            position: relative;
+        }
+        
+        .close-btn {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #8b4513;
+        }
+        
+        .close-btn:hover {
+            color: #a05252;
+        }
+        
+        .modal h2 {
+            color: #8b4513;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f0e6d6;
+            padding-bottom: 10px;
+        }
+        
+        .modal .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .modal label {
+            display: block;
+            margin-bottom: 8px;
+            color: #8b4513;
+            font-weight: 500;
+        }
+        
+        .modal input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #f0e6d6;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Georgia', serif;
+        }
+        
+        .modal input:focus {
+            outline: none;
+            border-color: #a05252;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        /* Стили для сортировки */
+        th {
+            cursor: pointer;
+            position: relative;
+            padding-right: 25px !important;
+            user-select: none;
+        }
+        
+        th i.sort-icon {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a05252;
+            font-size: 0.9rem;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+        
+        th:hover i.sort-icon {
+            opacity: 1;
+        }
+        
+        th.active-sort i.sort-icon {
+            opacity: 1;
+            color: #8b4513;
+        }
+        
+        th:last-child {
+            cursor: default;
+        }
+        
+        th:last-child i.sort-icon {
+            display: none;
+        }
+        
+        th:last-child:hover i.sort-icon {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <h1>
+            <i class="fas fa-language"></i>
+            Учим греческий
+        </h1>
+    </header>
+
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-links">
+                <a href="/dashboard"><i class="fas fa-home"></i> Главная</a>
+                <a href="/practice"><i class="fas fa-dumbbell"></i> Тренировка</a>
+                <a href="/add"><i class="fas fa-plus-circle"></i> Добавить</a>
+                <a href="/dictionary"><i class="fas fa-book"></i> Словарь</a>
+            </div>
+            <a href="/logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+        </div>
+    </nav>
+
+    <main class="content">
+        <h1 class="page-title">
+            <i class="fas fa-book-open"></i>
+            Словарь
+        </h1>
+        
+        {% if words %}
+            <div class="table-container">
+                <table id="dictionary-table">
+                    <thead>
+                        <tr>
+                            <th onclick="sortTable(0)" data-column="0">
+                                <i class="fas fa-heading"></i> Термин
+                                <i class="fas fa-sort sort-icon"></i>
+                            </th>
+                            <th onclick="sortTable(1)" data-column="1">
+                                <i class="fas fa-language"></i> Определение
+                                <i class="fas fa-sort sort-icon"></i>
+                            </th>
+                            <th onclick="sortTable(2)" data-column="2">
+                                <i class="fas fa-clock"></i> Статус
+                                <i class="fas fa-sort sort-icon"></i>
+                            </th>
+                            <th onclick="sortTable(3)" data-column="3">
+                                <i class="fas fa-calendar-plus"></i> Дата добавления
+                                <i class="fas fa-sort sort-icon"></i>
+                            </th>
+                            <th onclick="sortTable(4)" data-column="4">
+                                <i class="fas fa-calendar-check"></i> Дата тренировки
+                                <i class="fas fa-sort sort-icon"></i>
+                            </th>
+                            <th style="width: 100px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        {% for word in words %}
+                        <tr data-id="{{ word.id }}">
+                            <td><strong>{{ word.term }}</strong></td>
+                            <td>{{ word.definition }}</td>
+                            <td><span class="word-status">{{ word.status }}</span></td>
+                            <td class="date-cell">{{ word.created_at }}</td>
+                            <td class="date-cell">{% if word.planned_date %}{{ word.planned_date }}{% else %}{{ word.next_review_date }}{% endif %}</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="edit-btn" 
+                                            data-id="{{ word.id }}" 
+                                            data-term="{{ word.term }}" 
+                                            data-definition="{{ word.definition }}"
+                                            onclick="openEditModal(this)" 
+                                            title="Επεξεργασία">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <form action="/delete_word/{{ word.id }}" method="post" style="display: inline;" onsubmit="return confirm('Σίγουρα; Точно удалить слово «{{ word.term }}»?');">
+                                        <button type="submit" class="delete-btn" title="Διαγραφή">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+        {% else %}
+            <div class="empty-state">
+                <i class="fas fa-book-open" style="font-size: 3rem; color: #a05252; margin-bottom: 1rem;"></i>
+                <p style="margin-bottom: 1.5rem; color: #666;">Το λεξικό είναι άδειο. Добавь свои первые слова!</p>
+                <a href="/add" class="btn">
+                    <i class="fas fa-plus-circle"></i> Προσθήκη λέξεων
+                </a>
+            </div>
+        {% endif %}
+    </main>
+
+    <!-- Модальное окно для редактирования -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeEditModal()">&times;</span>
+            <h2><i class="fas fa-edit"></i> Επεξεργασία λέξης</h2>
+            
+            <form id="editForm" action="/edit_word" method="post">
+                <input type="hidden" name="word_id" id="edit_word_id">
+                
+                <div class="form-group">
+                    <label><i class="fas fa-heading"></i> Όρος:</label>
+                    <input type="text" name="term" id="edit_term" required>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-language"></i> Μετάφραση:</label>
+                    <input type="text" name="definition" id="edit_definition" required>
+                </div>
+                
+                <div class="modal-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Ακύρωση</button>
+                    <button type="submit" class="btn">Αποθήκευση</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <p><i class="fas fa-heart" style="color: #ff6b6b;"></i> Μπράβο, ρε.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Переменные для сортировки
+        let currentSortColumn = -1;
+        let currentSortDirection = 'asc';
+        
+        function sortTable(columnIndex) {
+            // Не сортируем последний столбец (с кнопками)
+            if (columnIndex === 5) return;
+            
+            const table = document.getElementById('dictionary-table');
+            const tbody = document.getElementById('table-body');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            
+            // Определяем направление сортировки
+            if (currentSortColumn === columnIndex) {
+                // Если кликнули на тот же столбец, меняем направление
+                currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                // Если кликнули на новый столбец, начинаем с возрастания
+                currentSortColumn = columnIndex;
+                currentSortDirection = 'asc';
+            }
+            
+            // Обновляем иконки сортировки
+            updateSortIcons(columnIndex);
+            
+            // Сортируем строки
+            rows.sort((a, b) => {
+                let aValue = a.cells[columnIndex].innerText.trim();
+                let bValue = b.cells[columnIndex].innerText.trim();
+                
+                // Особая обработка для дат
+                if (columnIndex === 3 || columnIndex === 4) {
+                    // Преобразуем даты в формат для сравнения
+                    aValue = aValue ? new Date(aValue).getTime() : 0;
+                    bValue = bValue ? new Date(bValue).getTime() : 0;
+                } else {
+                    // Для текста используем обычное сравнение строк
+                    aValue = aValue.toLowerCase();
+                    bValue = bValue.toLowerCase();
+                }
+                
+                if (aValue < bValue) return currentSortDirection === 'asc' ? -1 : 1;
+                if (aValue > bValue) return currentSortDirection === 'asc' ? 1 : -1;
+                return 0;
+            });
+            
+            // Перестраиваем таблицу
+            tbody.innerHTML = '';
+            rows.forEach(row => tbody.appendChild(row));
+        }
+        
+        function updateSortIcons(activeColumn) {
+            // Убираем активный класс у всех заголовков
+            document.querySelectorAll('th').forEach(th => {
+                th.classList.remove('active-sort');
+                const icon = th.querySelector('.sort-icon');
+                if (icon) {
+                    icon.className = 'fas fa-sort sort-icon';
+                }
+            });
+            
+            // Добавляем активный класс и правильную иконку для активного столбца
+            const activeTh = document.querySelector(`th[data-column="${activeColumn}"]`);
+            if (activeTh) {
+                activeTh.classList.add('active-sort');
+                const icon = activeTh.querySelector('.sort-icon');
+                if (icon) {
+                    icon.className = `fas fa-sort-${currentSortDirection === 'asc' ? 'up' : 'down'} sort-icon`;
+                }
+            }
+        }
+        
+        function openEditModal(button) {
+            var id = button.getAttribute('data-id');
+            var term = button.getAttribute('data-term');
+            var definition = button.getAttribute('data-definition');
+            
+            document.getElementById('edit_word_id').value = id;
+            document.getElementById('edit_term').value = term;
+            document.getElementById('edit_definition').value = definition;
+            
+            document.getElementById('editModal').style.display = 'block';
+        }
+        
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+        
+        window.onclick = function(event) {
+            const modal = document.getElementById('editModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
