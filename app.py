@@ -3,6 +3,7 @@ import sqlite3
 from datetime import timedelta, datetime, date
 import random
 import re
+import os
 from contextlib import contextmanager
 
 app = Flask(__name__)
@@ -573,4 +574,5 @@ def mark_as_correct():
     return redirect(url_for('practice'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
