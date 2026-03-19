@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавить слово - Учим греческий</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fffaf7;
+        }
+
+        .main-header {
+            background: linear-gradient(135deg, #a05252 0%, #8b4513 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(139, 69, 19, 0.2);
+        }
+
+        .main-header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: white;
+            font-family: 'Georgia', serif;
+        }
+
+        .main-header h1 i {
+            margin-right: 10px;
+        }
+
+        .main-nav {
+            background: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: #8b4513;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-family: 'Georgia', serif;
+        }
+
+        .nav-links a:hover {
+            background: #f9f3ec;
+            transform: translateY(-2px);
+        }
+
+        .nav-links a i {
+            margin-right: 6px;
+        }
+
+        .logout-btn {
+            background: #f9f3ec;
+            color: #8b4513;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #f0e6d6;
+            transform: translateY(-2px);
+        }
+
+        .content {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            color: #8b4513;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0e6d6;
+            font-weight: 400;
+            font-family: 'Georgia', serif;
+        }
+
+        .page-title i {
+            margin-right: 10px;
+            color: #a05252;
+        }
+
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(139,69,19,0.1);
+        }
+
+        .word-card {
+            background: #f9f3ec;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #a05252;
+        }
+
+        .word-card h3 {
+            color: #8b4513;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #8b4513;
+            font-weight: 500;
+            font-family: 'Georgia', serif;
+        }
+
+        input[type=text] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #f0e6d6;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Georgia', serif;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #a05252;
+            box-shadow: 0 0 0 3px rgba(160, 82, 82, 0.1);
+        }
+
+        .btn {
+            display: inline-block;
+            background: #8b4513;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Georgia', serif;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: #a05252;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 69, 19, 0.2);
+        }
+
+        .btn-secondary {
+            background: #f9f3ec;
+            color: #8b4513;
+            border: 1px solid #f0e6d6;
+        }
+
+        .btn-secondary:hover {
+            background: #f0e6d6;
+            color: #8b4513;
+        }
+
+        .btn-add {
+            background: #f9f3ec;
+            color: #8b4513;
+            width: auto;
+            margin-right: 10px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .success-message {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #2e7d32;
+            display: none;
+        }
+
+        .error-message {
+            background: #ffe6e6;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #c62828;
+            display: none;
+        }
+
+        .main-footer {
+            background: #8b4513;
+            color: white;
+            text-align: center;
+            padding: 40px 20px 30px;
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-note {
+            font-style: italic;
+            opacity: 0.7;
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <h1>
+            <i class="fas fa-language"></i>
+            Учим греческий
+        </h1>
+    </header>
+
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-links">
+                <a href="dashboard.html"><i class="fas fa-home"></i> Главная</a>
+                <a href="dictionary.html"><i class="fas fa-book"></i> Словарь</a>
+                <a href="add.html"><i class="fas fa-plus-circle"></i> Добавить</a>
+                <a href="practice.html"><i class="fas fa-dumbbell"></i> Тренировка</a>
+            </div>
+            <a href="index.html" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+        </div>
+    </nav>
+
+    <main class="content">
+        <h1 class="page-title">
+            <i class="fas fa-plus-circle"></i>
+            Добавить слова
+        </h1>
+        
+        <div class="form-container">
+            <div id="cardsContainer">
+                <!-- Первая карточка -->
+                <div class="word-card" id="card1">
+                    <h3><i class="fas fa-language"></i> Слово 1</h3>
+                    <div class="form-group">
+                        <label>Термин:</label>
+                        <input type="text" class="term-input" placeholder="π.χ. η γάτα" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Определение:</label>
+                        <input type="text" class="definition-input" placeholder="кошка" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button id="addCardBtn" class="btn btn-secondary btn-add">
+                    <i class="fas fa-plus-circle"></i> Ещё слово
+                </button>
+                <button id="saveAllBtn" class="btn">
+                    <i class="fas fa-save"></i> Сохранить все
+                </button>
+            </div>
+
+            <div id="successMessage" class="success-message">
+                <i class="fas fa-check-circle"></i> Слова отправлены! Страница обновится через 2 секунды...
+            </div>
+
+            <div id="errorMessage" class="error-message">
+                <i class="fas fa-exclamation-circle"></i> Ошибка при отправке.
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <p><i class="fas fa-heart" style="color: #ff6b6b;"></i> Μπράβο, ρε.</p>
+        </div>
+    </footer>
+
+    <script>
+        const FORM_ID = '1FAIpQLScvbB8Z9Fy9xgq2CTyHgzrFoLf5hQFkJQ0_SUE2Oz-SoNbxDw'; // 🔁 ЗАМЕНИ НА СВОЙ ID ФОРМЫ
+        const FORM_URL = `https://docs.google.com/forms/d/e/${FORM_ID}/formResponse`;
+
+        let cardCount = 1;
+
+        document.getElementById('addCardBtn').addEventListener('click', function() {
+            cardCount++;
+            const container = document.getElementById('cardsContainer');
+            const newCard = document.createElement('div');
+            newCard.className = 'word-card';
+            newCard.id = `card${cardCount}`;
+            newCard.innerHTML = `
+                <h3><i class="fas fa-language"></i> Слово ${cardCount}</h3>
+                <div class="form-group">
+                    <label>Термин:</label>
+                    <input type="text" class="term-input" placeholder="π.χ. γάτα" required>
+                </div>
+                <div class="form-group">
+                    <label>Определение:</label>
+                    <input type="text" class="definition-input" placeholder="кошка" required>
+                </div>
+            `;
+            container.appendChild(newCard);
+        });
+
+        document.getElementById('saveAllBtn').addEventListener('click', async function() {
+            const termInputs = document.querySelectorAll('.term-input');
+            const defInputs = document.querySelectorAll('.definition-input');
+            
+            const words = [];
+            for (let i = 0; i < termInputs.length; i++) {
+                const term = termInputs[i].value.trim();
+                const def = defInputs[i].value.trim();
+                if (term && def) {
+                    words.push({ term, def });
+                }
+            }
+
+            if (words.length === 0) {
+                alert('Добавьте хотя бы одно слово');
+                return;
+            }
+
+            // Отправляем каждое слово через невидимую iframe (чтобы обойти CORS)
+            let sentCount = 0;
+            for (let word of words) {
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                iframe.src = FORM_URL + '?entry.1988364450=' + encodeURIComponent(word.term) + '&entry.789192466=' + encodeURIComponent(word.def);
+                document.body.appendChild(iframe);
+                setTimeout(() => {
+                    document.body.removeChild(iframe);
+                }, 1000);
+                sentCount++;
+            }
+
+            document.getElementById('successMessage').style.display = 'block';
+            setTimeout(() => {
+                window.location.href = 'dictionary.html';
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход - Учим греческий</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fffaf7;
+        }
+
+        .main-header {
+            background: linear-gradient(135deg, #a05252 0%, #8b4513 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(139, 69, 19, 0.2);
+        }
+
+        .main-header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: white;
+            font-family: 'Georgia', serif;
+        }
+
+        .main-header h1 i {
+            margin-right: 10px;
+        }
+
+        .content {
+            max-width: 400px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            color: #8b4513;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0e6d6;
+            font-weight: 400;
+            font-family: 'Georgia', serif;
+            text-align: center;
+        }
+
+        .page-title i {
+            margin-right: 10px;
+            color: #a05252;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #8b4513;
+            font-weight: 500;
+            font-family: 'Georgia', serif;
+        }
+
+        input[type=text], 
+        input[type=password] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #f0e6d6;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Georgia', serif;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #a05252;
+            box-shadow: 0 0 0 3px rgba(160, 82, 82, 0.1);
+        }
+
+        .btn {
+            display: inline-block;
+            background: #8b4513;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Georgia', serif;
+            text-decoration: none;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: #a05252;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 69, 19, 0.2);
+        }
+
+        .main-footer {
+            background: #8b4513;
+            color: white;
+            text-align: center;
+            padding: 40px 20px 30px;
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-note {
+            font-style: italic;
+            opacity: 0.7;
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+
+        .error-message {
+            background-color: #ffe6e6;
+            color: #d63031;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #d63031;
+        }
+
+        .info-message {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <h1>
+            <i class="fas fa-language"></i>
+            Учим греческий
+        </h1>
+    </header>
+
+    <main class="content">
+        <h1 class="page-title">
+            <i class="fas fa-sign-in-alt"></i>
+            Вход в систему
+        </h1>
+        
+        <div id="error-container" style="display: none;"></div>
+        
+        <form id="loginForm" style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.08);">
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Логин</label>
+                <input type="text" id="username" value="admin" required>
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Пароль</label>
+                <input type="password" id="password" value="admin" required>
+            </div>
+            
+            <button type="submit" class="btn">
+                <i class="fas fa-sign-in-alt"></i> Войти
+            </button>
+        </form>
+        
+        <p class="info-message">
+            <i class="fas fa-info-circle"></i> Тестовый доступ: admin / admin
+        </p>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <p><i class="fas fa-heart" style="color: #ff6b6b;"></i> Учи греческий с удовольствием</p>
+            <p class="footer-note">Η γνώση είναι δύναμη (Знание - сила)</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username === 'admin' && password === 'admin') {
+                window.location.href = 'dashboard.html';
+            } else {
+                const errorDiv = document.getElementById('error-container');
+                errorDiv.style.display = 'block';
+                errorDiv.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-circle"></i> Неверный логин или пароль</div>';
+            }
+        });
+    </script>
+</body>
+</html>
