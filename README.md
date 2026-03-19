@@ -3,13 +3,21 @@ A spaced repetition application for learning Greek words, built with vanilla Jav
 
 ## Features
 📚 Dictionary with sortable columns
+
 ➕ Add new words via Google Forms integration
+
 🏋️ Spaced repetition training algorithm
+
 📊 Word statuses:
+
 new → learn → check → 1 day gap → 2 day gap → 3 day gap → 5 day gap → 8 day gap → 12 day gap → 20 day gap → 30 day gap → 60 day gap
+
 🔄 Automatic daily status updates
+
 🎯 Daily limit of 10 new words
+
 📱 Fully responsive design (works on phone, tablet, desktop)
+
 ☁️ All data stored in Google Sheets — syncs across all devices automatically
 
 ## How It Works
@@ -21,8 +29,11 @@ new → learn → check → 1 day gap → 2 day gap → 3 day gap → 5 day gap 
 
 ## Technologies
 Frontend: Vanilla HTML5, CSS3, JavaScript
+
 Backend: Google Sheets (as database) + Google Apps Script (for updates)
+
 Hosting: GitHub Pages
+
 APIs: Google Sheets API v4, Google Apps Script API
 
 ## Why This Stack?
