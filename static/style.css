@@ -89,25 +89,30 @@ body {
     text-align: center;
 }
 
+/* Кнопка выхода (в стиле навигации) */
 .logout-btn {
-    background: #f9f3ec;
     color: #8b4513;
+    text-decoration: none;
     padding: 8px 16px;
     border-radius: 8px;
-    text-decoration: none;
     transition: all 0.3s ease;
+    font-family: 'Georgia', serif;
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    background: transparent; /* убираем бежевый фон */
 }
 
 .logout-btn:hover {
-    background: #f0e6d6;
+    background: #f9f3ec; /* такой же фон, как у ссылок при наведении */
     transform: translateY(-2px);
 }
 
 .logout-btn i {
     font-size: 1.2rem;
+    width: 20px;
+    text-align: center;
+
 }
 
 /* ===== МОБИЛЬНАЯ ВЕРСИЯ ===== */
