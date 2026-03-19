@@ -1,4 +1,4 @@
-/* ===== СБРОС СТИЛЕЙ ===== */
+/* ===== СБРОС СИЛІВ ===== */
 * {
     margin: 0;
     padding: 0;
@@ -40,7 +40,7 @@ body {
     margin-right: 10px;
 }
 
-/* ===== НАВИГАЦИЯ ===== */
+/* Навигация */
 .main-nav {
     background: white;
     padding: 15px 20px;
@@ -56,11 +56,14 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
 }
 
 .nav-links {
     display: flex;
     gap: 20px;
+    flex-wrap: wrap;
 }
 
 .nav-links a {
@@ -70,6 +73,9 @@ body {
     border-radius: 8px;
     transition: all 0.3s ease;
     font-family: 'Georgia', serif;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .nav-links a:hover {
@@ -78,7 +84,9 @@ body {
 }
 
 .nav-links a i {
-    margin-right: 6px;
+    font-size: 1.2rem;
+    width: 20px;
+    text-align: center;
 }
 
 .logout-btn {
@@ -88,11 +96,56 @@ body {
     border-radius: 8px;
     text-decoration: none;
     transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .logout-btn:hover {
     background: #f0e6d6;
     transform: translateY(-2px);
+}
+
+.logout-btn i {
+    font-size: 1.2rem;
+}
+
+/* ===== МОБИЛЬНАЯ ВЕРСИЯ ===== */
+@media (max-width: 768px) {
+    .nav-container {
+        flex-direction: row;
+        justify-content: center;
+        gap: 10px;
+    }
+    
+    .nav-links {
+        gap: 5px;
+    }
+    
+    /* Скрываем текст, оставляем только иконки */
+    .nav-links a span,
+    .logout-btn span {
+        display: none;
+    }
+    
+    /* Увеличиваем иконки для удобного нажатия */
+    .nav-links a i,
+    .logout-btn i {
+        font-size: 1.5rem;
+    }
+    
+    /* Увеличиваем область нажатия */
+    .nav-links a,
+    .logout-btn {
+        padding: 10px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-links a i,
+    .logout-btn i {
+        font-size: 1.3rem;
+    }
 }
 
 /* ===== ОСНОВНОЙ КОНТЕНТ ===== */
@@ -287,7 +340,7 @@ tr:hover {
     background: #fefcf9;
 }
 
-/* ===== ФОРМЫ ===== */
+/* ===== ФОРМИ ===== */
 .form-group {
     margin-bottom: 20px;
 }
@@ -367,7 +420,7 @@ input:focus {
     font-family: 'Georgia', serif;
 }
 
-/* ===== ПУСТЫЕ СОСТОЯНИЯ ===== */
+/* ===== ПУСТЬІЕ СОСТОЯНИЯ ===== */
 .empty-state {
     text-align: center;
     padding: 60px 20px;
@@ -407,58 +460,6 @@ input:focus {
     opacity: 0.7;
     font-size: 0.9rem;
     margin-top: 20px;
-}
-
-/* ===== АДАПТИВНОСТЬ ===== */
-@media (max-width: 768px) {
-    .main-header h1 {
-        font-size: 2rem;
-    }
-    
-    .nav-container {
-        flex-direction: column;
-        gap: 15px;
-    }
-    
-    .nav-links {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .page-title {
-        font-size: 1.5rem;
-    }
-    
-    .words-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .card-header {
-        height: 140px;
-    }
-    
-    .card-icon {
-        font-size: 4rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .main-header h1 {
-        font-size: 1.5rem;
-    }
-    
-    .content {
-        padding: 0 15px;
-    }
-    
-    .nav-links a {
-        padding: 6px 12px;
-        font-size: 0.9rem;
-    }
 }
 
 /* ===== ДОПОЛНИТЕЛЬНЫЕ СТИЛИ ===== */
@@ -523,100 +524,4 @@ input:focus {
     padding: 15px;
     margin: 10px 0;
     border-radius: 8px;
-}
-
-/* Навигация */
-.main-nav {
-    background: white;
-    padding: 15px 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-
-.nav-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap; /* Разрешаем перенос */
-    gap: 15px;
-}
-
-.nav-links {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap; /* Разрешаем перенос ссылок */
-}
-
-.nav-links a {
-    color: #8b4513;
-    text-decoration: none;
-    padding: 8px 16px;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    font-family: 'Georgia', serif;
-    white-space: nowrap; /* Запрещаем перенос внутри ссылки */
-}
-
-.nav-links a:hover {
-    background: #f9f3ec;
-    transform: translateY(-2px);
-}
-
-.nav-links a i {
-    margin-right: 6px;
-}
-
-.logout-btn {
-    background: #f9f3ec;
-    color: #8b4513;
-    padding: 8px 16px;
-    border-radius: 8px;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    white-space: nowrap;
-}
-
-.logout-btn:hover {
-    background: #f0e6d6;
-    transform: translateY(-2px);
-}
-
-/* Адаптивность для мобильных */
-@media (max-width: 768px) {
-    .nav-container {
-        flex-direction: column; /* Ставим всё в колонку */
-        align-items: stretch;
-    }
-    
-    .nav-links {
-        justify-content: center; /* Центрируем ссылки */
-        gap: 10px;
-    }
-    
-    .nav-links a {
-        padding: 8px 12px; /* Чуть меньше отступы */
-        font-size: 0.9rem;
-    }
-    
-    .logout-btn {
-        text-align: center;
-        margin-top: 5px;
-    }
-}
-
-@media (max-width: 480px) {
-    .nav-links {
-        flex-direction: column; /* На очень маленьких экранах ссылки друг под другом */
-        align-items: center;
-        width: 100%;
-    }
-    
-    .nav-links a {
-        width: 100%;
-        text-align: center;
-    }
 }
