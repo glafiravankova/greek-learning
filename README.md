@@ -37,9 +37,9 @@ Hosting: GitHub Pages
 APIs: Google Sheets API v4, Google Apps Script API
 
 ## Why This Stack?
-100% free (no server costs)
-Works in regions with restricted access
-Data syncs across all devices automatically
-No backend to maintain
-Full control over data (it's just a Google Sheet)
+- 100% free (no server costs)
+- Works in regions with restricted access
+- Data syncs across all devices automatically
+- No backend to maintain
+- Full control over data (it's just a Google Sheet)
 
