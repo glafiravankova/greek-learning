@@ -490,12 +490,19 @@
             
             document.getElementById('progress-info').textContent = `Осталось карточек: ${todayCards.length - currentCardIndex - 1}`;
             
+            // Сохраняем информацию о последнем ответе
+            lastAnswer = { 
+                card, 
+                direction: currentDirection, 
+                userAnswer, 
+                correctAnswer,
+                wasCorrect: isCorrect 
+            };
+            
             if (!isCorrect) {
                 document.getElementById('fix-button-container').classList.remove('hidden');
-                lastAnswer = { card, direction: currentDirection, userAnswer, correctAnswer };
             } else {
                 document.getElementById('fix-button-container').classList.add('hidden');
-                lastAnswer = null;
             }
         }
 
@@ -524,7 +531,7 @@
             }
         }
 
-        // Обработчики
+        // Обработчики событий
         document.getElementById('answer-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const userAnswer = document.getElementById('answer-input').value;
@@ -532,7 +539,7 @@
             const correctAnswer = currentDirection === 'term_to_def' ? card.definition : card.term;
             
             if (cleanText(userAnswer) === cleanText(correctAnswer)) {
-                await handleCorrectAnswer(card);
+                showResult(true, userAnswer, correctAnswer);
             } else {
                 showResult(false, userAnswer, correctAnswer);
             }
@@ -544,12 +551,19 @@
             showQuestion();
         });
 
-        document.getElementById('continue-btn').addEventListener('click', () => {
-            if (todayCards.length > 0) {
-                if (currentCardIndex >= todayCards.length) currentCardIndex = 0;
-                showQuestion();
+        document.getElementById('continue-btn').addEventListener('click', async () => {
+            if (lastAnswer && lastAnswer.wasCorrect) {
+                // Если ответ был правильным
+                await handleCorrectAnswer(lastAnswer.card);
+                lastAnswer = null;
             } else {
-                showNoWords();
+                // Просто переходим к следующему вопросу
+                if (todayCards.length > 0) {
+                    if (currentCardIndex >= todayCards.length) currentCardIndex = 0;
+                    showQuestion();
+                } else {
+                    showNoWords();
+                }
             }
         });
 
@@ -560,6 +574,7 @@
             }
         });
 
+        // Запуск
         initPractice();
     </script>
 </body>
