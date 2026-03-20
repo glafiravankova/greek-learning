@@ -404,13 +404,14 @@
                 nextReview = addDays(today, 1);
             } else {
                 const idx = STATUS_ORDER.indexOf(card.status);
-                if (idx < STATUS_ORDER.length - 1) {
+                if (idx !== -1 && idx < STATUS_ORDER.length - 1) {
                     newStatus = STATUS_ORDER[idx + 1];
+                    const days = STATUS_INTERVALS[newStatus] || 0;
+                    nextReview = days > 0 ? addDays(today, days) : today;
                 } else {
                     newStatus = card.status;
+                    nextReview = addDays(today, 60);
                 }
-                const days = STATUS_INTERVALS[newStatus] || 0;
-                nextReview = days ? addDays(today, days) : today;
             }
 
             await updateWord(card.wordId, {
@@ -419,11 +420,15 @@
                 next_review: nextReview
             });
 
-            todayCards.splice(currentCardIndex, 1);
+            // ПЕРЕЗАГРУЖАЕМ ВСЕ КАРТОЧКИ
+            await refreshTodayCards();
+            
+            // Если карточек нет — показываем "На сегодня всё"
             if (todayCards.length === 0) {
                 showNoWords();
             } else {
-                if (currentCardIndex >= todayCards.length) currentCardIndex = 0;
+                // Начинаем с первой карточки
+                currentCardIndex = 0;
                 showQuestion();
             }
         }
@@ -435,13 +440,53 @@
                 last_reviewed: today,
                 next_review: today
             });
-            todayCards.splice(currentCardIndex, 1);
+            
+            // ПЕРЕЗАГРУЖАЕМ ВСЕ КАРТОЧКИ
+            await refreshTodayCards();
+            
+            // Если карточек нет — показываем "На сегодня всё"
             if (todayCards.length === 0) {
                 showNoWords();
             } else {
-                if (currentCardIndex >= todayCards.length) currentCardIndex = 0;
+                // Начинаем с первой карточки
+                currentCardIndex = 0;
                 showQuestion();
             }
+        }
+
+        async function refreshTodayCards() {
+            // Обновляем статусы новых слов
+            await updateDailyWords();
+            
+            // Заново формируем карточки на сегодня
+            const words = await loadWords();
+            const today = getTodayString();
+            
+            const newCards = [];
+            
+            // to_learn — 2 карточки
+            words.filter(w => w.status === 'to_learn').forEach(word => {
+                newCards.push({ wordId: word.id, term: word.term, definition: word.definition, status: 'to_learn' });
+                newCards.push({ wordId: word.id, term: word.term, definition: word.definition, status: 'to_learn' });
+            });
+            
+            // to_check — 1 карточка
+            words.filter(w => w.status === 'to_check').forEach(word => {
+                newCards.push({ wordId: word.id, term: word.term, definition: word.definition, status: 'to_check' });
+            });
+            
+            // остальные с next_review сегодня
+            const otherToday = words.filter(w => 
+                !['to_learn', 'to_check'].includes(w.status) && 
+                w.next_review === today
+            );
+            
+            otherToday.forEach(word => {
+                newCards.push({ wordId: word.id, term: word.term, definition: word.definition, status: word.status });
+            });
+            
+            todayCards = newCards.sort(() => Math.random() - 0.5);
+            console.log('🔄 Карточки обновлены. Всего:', todayCards.length);
         }
 
         function showQuestion() {
@@ -552,12 +597,15 @@
         });
 
         document.getElementById('continue-btn').addEventListener('click', async () => {
-            if (lastAnswer && lastAnswer.wasCorrect) {
-                // Если ответ был правильным
-                await handleCorrectAnswer(lastAnswer.card);
+            if (lastAnswer) {
+                if (lastAnswer.wasCorrect) {
+                    await handleCorrectAnswer(lastAnswer.card);
+                } else {
+                    await handleIncorrectAnswer(lastAnswer.card);
+                }
                 lastAnswer = null;
             } else {
-                // Просто переходим к следующему вопросу
+                // Если нет сохранённого ответа (например, при пропуске)
                 if (todayCards.length > 0) {
                     if (currentCardIndex >= todayCards.length) currentCardIndex = 0;
                     showQuestion();
@@ -569,6 +617,7 @@
 
         document.getElementById('fix-btn').addEventListener('click', async () => {
             if (lastAnswer) {
+                // Принудительно считаем ответ правильным
                 await handleCorrectAnswer(lastAnswer.card);
                 lastAnswer = null;
             }
