@@ -1,4 +1,4 @@
-# Learn Greek — Spaced Repetition Tracker
+## 🧠 Learn Greek — Spaced Repetition Tracker
 
 A no‑backend web app for learning Greek vocabulary using spaced repetition.  
 Hosted on GitHub Pages, powered by Google Sheets.
@@ -7,7 +7,7 @@ Hosted on GitHub Pages, powered by Google Sheets.
 
 ---
 
-## Problems this solves
+## 🔥 Problems this solves
 
 **1. Language apps don't separate known words from difficult ones**  
 You keep reviewing the same easy words, wasting time.
@@ -19,7 +19,7 @@ This app solves both with a controlled spaced repetition system.
 
 ---
 
-## How it works
+## ⚙️ How it works
 
 - **Daily limit:** at most 10 new words per day  
 - **Spaced repetition:** words you know well appear less often  
@@ -31,7 +31,7 @@ Word status flow:
 
 ---
 
-## Why no backend
+## 🚀 Why no backend
 
 The original version used Flask + SQLite.  
 Hosting it would require a paid server, and many platforms are blocked without a VPN.
@@ -45,7 +45,7 @@ Everything is free, works anywhere, and syncs across devices automatically.
 
 ---
 
-## Features
+## 📦 Features
 
 - Dictionary with sortable columns  
 - Add multiple words at once  
@@ -56,7 +56,7 @@ Everything is free, works anywhere, and syncs across devices automatically.
 
 ---
 
-## Tech stack
+## 🛠️ Tech stack
 
 - HTML, CSS, JavaScript (vanilla)  
 - Google Sheets API  
@@ -65,9 +65,14 @@ Everything is free, works anywhere, and syncs across devices automatically.
 
 ---
 
-## License
+## 📄 License
 
 MIT
+
+---
+
+Built to learn Greek without stress.  
+Μπράβο, ρε.
 
 ---
 
