@@ -73,8 +73,3 @@ MIT
 
 Built to learn Greek without stress.  
 Μπράβο, ρε.
-
----
-
-Built to learn Greek without stress.  
-Μπράβο, ρε.
