@@ -1,45 +1,75 @@
-### Learn Greek
-A spaced repetition application for learning Greek words, built with vanilla JavaScript and Google Sheets as a database.
+# Learn Greek — Spaced Repetition Tracker
+
+A no‑backend web app for learning Greek vocabulary using spaced repetition.  
+Hosted on GitHub Pages, powered by Google Sheets.
+
+🔗 [glafiravankova.github.io/greek-learning](https://glafiravankova.github.io/greek-learning)
+
+---
+
+## Problems this solves
+
+**1. Language apps don't separate known words from difficult ones**  
+You keep reviewing the same easy words, wasting time.
+
+**2. They push too many new words at once**  
+No break, no real limit. That leads to burnout, not progress.
+
+This app solves both with a controlled spaced repetition system.
+
+---
+
+## How it works
+
+- **Daily limit:** at most 10 new words per day  
+- **Spaced repetition:** words you know well appear less often  
+- **Hard words stay longer** until you learn them  
+- **If you make a mistake** — the word resets to `to_learn` and you go through all stages again  
+
+Word status flow:  
+`new` → `to_learn` → `to_check` → `1_day` → `2_day` → `3_day` → `5_day` → `8_day` → `12_day` → `20_day` → `30_day` → `60_day`
+
+---
+
+## Why no backend
+
+The original version used Flask + SQLite.  
+Hosting it would require a paid server, and many platforms are blocked without a VPN.
+
+This version is **100% frontend**:
+- Google Sheets as a database  
+- Google Apps Script for updates  
+- GitHub Pages for hosting  
+
+Everything is free, works anywhere, and syncs across devices automatically.
+
+---
 
 ## Features
-📚 Dictionary with sortable columns
 
-➕ Add new words via Google Forms integration
+- Dictionary with sortable columns  
+- Add multiple words at once  
+- Spaced repetition training  
+- Daily limit of 10 new words  
+- Progress sync across devices  
+- No server, no database, no subscription  
 
-🏋️ Spaced repetition training algorithm
+---
 
-📊 Word statuses:
+## Tech stack
 
-new → learn → check → 1 day gap → 2 day gap → 3 day gap → 5 day gap → 8 day gap → 12 day gap → 20 day gap → 30 day gap → 60 day gap
+- HTML, CSS, JavaScript (vanilla)  
+- Google Sheets API  
+- Google Apps Script  
+- GitHub Pages  
 
-🔄 Automatic daily status updates
+---
 
-🎯 Daily limit of 10 new words
+## License
 
-📱 Fully responsive design (works on phone, tablet, desktop)
+MIT
 
-☁️ All data stored in Google Sheets — syncs across all devices automatically
+---
 
-## How It Works
-1. Words are added through a simple form and sent to Google Forms
-2. Google Apps Script automatically copies new words to the main sheet
-3. The app reads data directly from Google Sheets API
-4. Training sessions update word statuses in real time
-5. Daily limit of 10 new words is enforced by a smart scheduling system (first_review column)
-
-## Technologies
-Frontend: Vanilla HTML5, CSS3, JavaScript
-
-Backend: Google Sheets (as database) + Google Apps Script (for updates)
-
-Hosting: GitHub Pages
-
-APIs: Google Sheets API v4, Google Apps Script API
-
-## Why This Stack?
-- 100% free (no server costs)
-- Works in regions with restricted access
-- Data syncs across all devices automatically
-- No backend to maintain
-- Full control over data (it's just a Google Sheet)
-
+Built to learn Greek without stress.  
+Μπράβο, ρε.
