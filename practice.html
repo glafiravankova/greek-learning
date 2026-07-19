@@ -258,7 +258,7 @@
         const API_KEY = 'AIzaSyAqWHZk7qQ8EqeGjWHFAzfmYtMs08RKq2k';
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx3c9yqCbMiw72cXJxoZgb-N4xnhg1vsFwTgRllGTdFbCjIZxGeX-q3-HQinKMPAt7I/exec';
 
-        const STATUS_ORDER = ['new', 'to_learn', 'to_check', '1_day', '2_day', '3_day', '5_day', '8_day', '12_day', '20_day', '30_day', '60_day'];
+        const STATUS_ORDER = ['new', 'to_learn', 'to_check', '1_day', '2_day', '3_day', '5_day', '8_day', '12_day', '20_day', '30_day', '60_day', '120_day', '230_day', '365_day'];
         const STATUS_INTERVALS = {
             'new': 0,
             'to_learn': 0,
@@ -271,7 +271,10 @@
             '12_day': 12,
             '20_day': 20,
             '30_day': 30,
-            '60_day': 60
+            '60_day': 60,
+            '120_day': 120,
+            '230_day': 230,
+            '365_day': 365
         };
 
         let todayCards = [];
