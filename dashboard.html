@@ -588,11 +588,13 @@
         // ===== Гистограмма распределения по статусам =====
         let statusChartInstance = null;
 
-        // Плагин для отображения значений над столбцами
+        // Плагин для отображения значений над столбцами (или справа для горизонтальных)
         const valueLabelPlugin = {
             id: 'valueLabel',
             afterDatasetsDraw(chart) {
                 const { ctx } = chart;
+                const isHorizontal = chart.options.indexAxis === 'y';
+                
                 chart.data.datasets.forEach((dataset, i) => {
                     const meta = chart.getDatasetMeta(i);
                     meta.data.forEach((bar, index) => {
@@ -601,9 +603,17 @@
                             ctx.save();
                             ctx.fillStyle = '#8b4513';
                             ctx.font = '13px Georgia, serif';
-                            ctx.textAlign = 'center';
-                            ctx.textBaseline = 'bottom';
-                            ctx.fillText(value, bar.x, bar.y - 5);
+                            
+                            if (isHorizontal) {
+                                ctx.textAlign = 'left';
+                                ctx.textBaseline = 'middle';
+                                ctx.fillText(value, bar.x + 6, bar.y);
+                            } else {
+                                ctx.textAlign = 'center';
+                                ctx.textBaseline = 'bottom';
+                                ctx.fillText(value, bar.x, bar.y - 5);
+                            }
+                            
                             ctx.restore();
                         }
                     });
@@ -637,12 +647,20 @@
                 '365_day': '365 дней'
             };
             
+            // Проверяем ширину экрана
+            const isMobile = window.innerWidth <= 768;
+            
+            // Порядок статусов (на мобильных переворачиваем, чтобы new был сверху)
+            const orderedStatuses = isMobile 
+                ? [...STATUS_ORDER].reverse()
+                : STATUS_ORDER;
+            
             // Считаем количество слов по каждому статусу
-            const counts = STATUS_ORDER.map(status => {
+            const counts = orderedStatuses.map(status => {
                 return words.filter(w => w.status === status).length;
             });
             
-            const labels = STATUS_ORDER.map(s => STATUS_LABELS[s] || s);
+            const labels = orderedStatuses.map(s => STATUS_LABELS[s] || s);
             
             // Максимальное значение и округление вверх до сотни
             const maxValue = Math.max(...counts, 1);
@@ -670,6 +688,7 @@
                 },
                 plugins: [valueLabelPlugin],
                 options: {
+                    indexAxis: isMobile ? 'y' : 'x',
                     responsive: true,
                     maintainAspectRatio: false,
                     animation: false,
@@ -681,7 +700,54 @@
                             enabled: false
                         }
                     },
-                    scales: {
+                    scales: isMobile ? {
+                        x: {
+                            beginAtZero: true,
+                            max: maxY,
+                            ticks: {
+                                color: '#333',
+                                font: {
+                                    family: 'Georgia, serif',
+                                    size: 11
+                                },
+                                stepSize: 100,
+                                precision: 0
+                            },
+                            grid: {
+                                color: '#f0e6d6'
+                            },
+                            title: {
+                                display: true,
+                                text: 'Количество слов',
+                                color: '#666',
+                                font: {
+                                    family: 'Georgia, serif',
+                                    size: 12
+                                }
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: '#333',
+                                font: {
+                                    family: 'Georgia, serif',
+                                    size: 12
+                                }
+                            },
+                            grid: {
+                                display: false
+                            },
+                            title: {
+                                display: true,
+                                text: 'Статус',
+                                color: '#666',
+                                font: {
+                                    family: 'Georgia, serif',
+                                    size: 12
+                                }
+                            }
+                        }
+                    } : {
                         y: {
                             beginAtZero: true,
                             max: maxY,
@@ -734,6 +800,16 @@
                 }
             });
         }
+
+        // Перерисовка при изменении размера окна (поворот телефона)
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(async () => {
+                const words = await loadWords();
+                renderChart(words);
+            }, 300);
+        });
 
         // Запуск
         updateDashboard();
