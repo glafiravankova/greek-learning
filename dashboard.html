@@ -258,6 +258,59 @@
             .card-icon {
                 font-size: 4rem;
             }
+                    /* Стили для таблицы слов на сегодня */
+        .section-title {
+            color: #8b4513;
+            font-size: 1.4rem;
+            margin: 30px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0e6d6;
+            font-weight: 400;
+            font-family: 'Georgia', serif;
+        }
+
+        .section-title i {
+            margin-right: 8px;
+            color: #a05252;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .table-container table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-container th {
+            background: #f9f3ec;
+            color: #8b4513;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 500;
+            font-family: 'Georgia', serif;
+            border-bottom: 2px solid #a05252;
+        }
+
+        .table-container td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #f0e6d6;
+        }
+
+        .table-container tr:hover {
+            background: #fefcf9;
+        }
+
+        .today-empty {
+            text-align: center;
+            padding: 30px 20px;
+            color: #666;
+            font-style: italic;
+        }
         }
     </style>
 </head>
@@ -329,6 +382,16 @@
                     </span>
                 </div>
             </a>
+        </div>
+        
+        <!-- Таблица слов на сегодня -->
+        <h2 class="section-title">
+            <i class="fas fa-calendar-day"></i> Слова на сегодня
+        </h2>
+        <div id="today-words-container" class="table-container">
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i> Загрузка...
+            </div>
         </div>
         
         <div class="greek-pattern"></div>
@@ -414,10 +477,12 @@
         }
 
         // Обновить дашборд
-        async function updateDashboard() {
+                // Обновить дашборд
+                async function updateDashboard() {
             const words = await updateDailyWords();
             const today = getTodayString();
             
+            // Подсчёт карточек
             const toLearn = words.filter(w => w.status === 'to_learn').length;
             const toCheck = words.filter(w => w.status === 'to_check').length;
             const otherToday = words.filter(w => 
@@ -429,8 +494,39 @@
             
             document.getElementById('cards-count').innerHTML = `<i class="fas fa-layer-group"></i> Карточек: ${cardsCount}`;
             document.getElementById('words-count').innerHTML = `<i class="fas fa-font"></i> Слов: ${words.length}`;
+            
+            // Показываем слова с first_review = сегодня
+            displayTodayWords(words, today);
         }
 
+        // Отобразить слова с first_review = сегодня
+        function displayTodayWords(words, today) {
+            const container = document.getElementById('today-words-container');
+            
+            // Фильтруем слова по first_review = сегодня
+            const todayWords = words.filter(w => w.first_review === today);
+            
+            if (todayWords.length === 0) {
+                container.innerHTML = '<div class="today-empty">Сегодня новых слов нет</div>';
+                return;
+            }
+            
+            let html = '<table>';
+            html += '<thead><tr>';
+            html += '<th><i class="fas fa-heading"></i> Τέρμιν</th>';
+            html += '<th><i class="fas fa-language"></i> Μετάφραση</th>';
+            html += '</tr></thead><tbody>';
+            
+            todayWords.forEach(word => {
+                html += '<tr>';
+                html += `<td><strong>${word.term || ''}</strong></td>`;
+                html += `<td>${word.definition || ''}</td>`;
+                html += '</tr>';
+            });
+            
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
         // Запуск
         updateDashboard();
     </script>
