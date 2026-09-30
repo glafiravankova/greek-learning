@@ -16,6 +16,10 @@
     <meta name="apple-mobile-web-app-title" content="Учим греческий">
     <meta name="theme-color" content="#8b4513">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Chart.js для гистограммы -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
         * {
             margin: 0;
@@ -311,6 +315,17 @@
             font-size: 1.2rem;
         }
 
+        /* ===== Стили для гистограммы ===== */
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            margin-top: 20px;
+            height: 450px;
+            position: relative;
+        }
+
         /* ===== Адаптивность ===== */
         @media (max-width: 768px) {
             .main-header h1 {
@@ -338,8 +353,14 @@
             .card-icon {
                 font-size: 4rem;
             }
+
+            .chart-container {
+                height: 350px;
+                padding: 20px 10px;
+            }
         }
     </style>
+
 </head>
 <body>
     <header class="main-header">
@@ -420,7 +441,14 @@
                 <i class="fas fa-spinner fa-spin"></i> Загрузка...
             </div>
         </div>
-        
+        <!-- Гистограмма распределения по статусам -->
+        <h2 class="section-title">
+            <i class="fas fa-chart-bar"></i> Распределение слов по интервалам запоминания
+        </h2>
+        <div class="chart-container">
+            <canvas id="statusChart"></canvas>
+        </div>
+
         <div class="greek-pattern"></div>
     </main>
 
@@ -503,8 +531,8 @@
             return await loadWords();
         }
 
-                // Обновить дашборд
-                async function updateDashboard() {
+        // Обновить дашборд
+        async function updateDashboard() {
             const words = await updateDailyWords();
             const today = getTodayString();
             
@@ -523,6 +551,9 @@
             
             // Показываем слова с first_review = сегодня
             displayTodayWords(words, today);
+            
+            // Строим гистограмму
+            renderChart(words);
         }
 
         // Отобразить слова с first_review = сегодня
@@ -553,6 +584,149 @@
             html += '</tbody></table>';
             container.innerHTML = html;
         }
+
+        // ===== Гистограмма распределения по статусам =====
+        let statusChartInstance = null;
+
+        function renderChart(words) {
+            const STATUS_ORDER = [
+                'new', 'to_learn', 'to_check', '1_day', '2_day', '3_day',
+                '5_day', '8_day', '12_day', '20_day', '30_day', '60_day',
+                '120_day', '230_day', '365_day'
+            ];
+            
+            // Человекочитаемые подписи
+            const STATUS_LABELS = {
+                'new': 'новые',
+                'to_learn': 'к изучению',
+                'to_check': 'на проверку',
+                '1_day': '1 день',
+                '2_day': '2 дня',
+                '3_day': '3 дня',
+                '5_day': '5 дней',
+                '8_day': '8 дней',
+                '12_day': '12 дней',
+                '20_day': '20 дней',
+                '30_day': '30 дней',
+                '60_day': '60 дней',
+                '120_day': '120 дней',
+                '230_day': '230 дней',
+                '365_day': '365 дней'
+            };
+            
+            // Считаем количество слов по каждому статусу
+            const counts = STATUS_ORDER.map(status => {
+                return words.filter(w => w.status === status).length;
+            });
+            
+            const labels = STATUS_ORDER.map(s => STATUS_LABELS[s] || s);
+            
+            const ctx = document.getElementById('statusChart').getContext('2d');
+            
+            // Если график уже есть — удаляем перед пересозданием
+            if (statusChartInstance) {
+                statusChartInstance.destroy();
+            }
+            
+            statusChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Количество слов',
+                        data: counts,
+                        backgroundColor: '#a05252',
+                        borderColor: '#8b4513',
+                        borderWidth: 1,
+                        borderRadius: 6,
+                        hoverBackgroundColor: '#8b4513'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: '#8b4513',
+                            titleColor: '#fffaf7',
+                            bodyColor: '#fffaf7',
+                            titleFont: {
+                                family: 'Georgia, serif',
+                                size: 14
+                            },
+                            bodyFont: {
+                                family: 'Georgia, serif',
+                                size: 13
+                            },
+                            padding: 10,
+                            cornerRadius: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Слов: ' + context.parsed.y;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#333',
+                                font: {
+                                    family: 'Georgia, serif',
+                                    size: 12
+                                },
+                                stepSize: 1,
+                                precision: 0
+                            },
+                            grid: {
+                                color: '#f0e6d6'
+                            },
+                            title: {
+                                display: true,
+                                text: 'Количество слов',
+                                color: '#666',
+                                font: {
+                                    family: 'Georgia, serif',
+                                    size: 13
+                                }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#333',
+                                font: {
+                                    family: 'Georgia, serif',
+                                    size: 12
+                                },
+                                maxRotation: 45,
+                                minRotation: 45
+                            },
+                            grid: {
+                                display: false
+                            },
+                            title: {
+                                display: true,
+                                text: 'Статус слова',
+                                color: '#666',
+                                font: {
+                                    family: 'Georgia, serif',
+                                    size: 13
+                                }
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 800,
+                        easing: 'easeOutQuart'
+                    }
+                }
+            });
+        }
+
         // Запуск
         updateDashboard();
     </script>
