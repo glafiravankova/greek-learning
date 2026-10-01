@@ -60,6 +60,113 @@
             margin-bottom: 1rem;
             font-size: 1rem;
         }
+
+        /* ===== Переключатель авто-озвучки ===== */
+        .direction-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 1rem;
+        }
+
+        .direction-row .direction-badge {
+            margin: 0;
+        }
+
+        .audio-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .audio-toggle input {
+            display: none;
+        }
+
+        .audio-toggle-slider {
+            position: relative;
+            width: 42px;
+            height: 24px;
+            background: #f0e6d6;
+            border-radius: 12px;
+            transition: background 0.3s ease;
+        }
+
+        .audio-toggle-slider::before {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+            transition: transform 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .audio-toggle input:checked + .audio-toggle-slider {
+            background: #a05252;
+        }
+
+        .audio-toggle input:checked + .audio-toggle-slider::before {
+            transform: translateX(18px);
+        }
+
+        .audio-toggle i {
+            color: #8b4513;
+            font-size: 1rem;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+
+        .audio-toggle input:checked ~ i {
+            opacity: 1;
+        }
+
+        /* Обёртка вокруг слова с кнопкой 🔊 */
+        .practice-prompt-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 2rem 0;
+        }
+
+        .practice-prompt-wrapper .practice-prompt {
+            flex: 1;
+            margin: 0;
+        }
+
+        .speak-btn {
+            background: #f9f3ec;
+            color: #8b4513;
+            border: 2px solid #f0e6d6;
+            border-radius: 50%;
+            width: 55px;
+            height: 55px;
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .speak-btn:hover {
+            background: #f0e6d6;
+            border-color: #a05252;
+            transform: scale(1.08);
+        }
+
+        .speak-btn.playing {
+            background: #a05252;
+            color: white;
+            border-color: #8b4513;
+        }
         
         .note-hint {
             text-align: center;
@@ -110,6 +217,47 @@
 
         .correct-answer {
             background: #e8f5e9;
+        }
+
+        /* Строка с правильным ответом и кнопкой озвучки */
+        .correct-answer-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0.5rem 0;
+        }
+
+        .correct-answer-row .correct-answer {
+            flex: 1;
+            margin: 0;
+        }
+
+        .speak-btn-small {
+            background: #f9f3ec;
+            color: #8b4513;
+            border: 2px solid #f0e6d6;
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .speak-btn-small:hover {
+            background: #f0e6d6;
+            border-color: #a05252;
+            transform: scale(1.08);
+        }
+
+        .speak-btn-small.playing {
+            background: #a05252;
+            color: white;
+            border-color: #8b4513;
         }
 
         .btn {
@@ -170,6 +318,19 @@
         .hidden {
             display: none;
         }
+
+        @media (max-width: 480px) {
+            .speak-btn {
+                width: 48px;
+                height: 48px;
+                font-size: 1.2rem;
+            }
+            .speak-btn-small {
+                width: 34px;
+                height: 34px;
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -200,8 +361,20 @@
         <div id="practice-container" class="practice-container hidden">
             <!-- Блок вопроса -->
             <div id="question-block">
-                <div class="direction-badge" id="direction-badge"></div>
-                <div class="practice-prompt" id="prompt"></div>
+                <div class="direction-row">
+                    <div class="direction-badge" id="direction-badge"></div>
+                    <label class="audio-toggle" title="Автоматическая озвучка">
+                        <input type="checkbox" id="audio-toggle" checked>
+                        <span class="audio-toggle-slider"></span>
+                        <i class="fas fa-volume-up"></i>
+                    </label>
+                </div>
+                <div class="practice-prompt-wrapper">
+                    <div class="practice-prompt" id="prompt"></div>
+                    <button type="button" id="speak-btn" class="speak-btn" title="Прослушать">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                </div>
                 <form id="answer-form">
                     <input type="text" id="answer-input" class="practice-input" placeholder="Твой ответ..." autofocus required>
                     <div class="button-group">
@@ -221,7 +394,12 @@
                 <div class="answer-comparison">
                     <div id="prompt-word" class="prompt-word"></div>
                     <div id="user-answer" class="user-answer"></div>
-                    <div id="correct-answer" class="correct-answer"></div>
+                    <div class="correct-answer-row">
+                        <div id="correct-answer" class="correct-answer"></div>
+                        <button type="button" id="speak-answer-btn" class="speak-btn-small" title="Прослушать">
+                            <i class="fas fa-volume-up"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="button-group">
                     <button id="continue-btn" class="btn">Продолжить</button>
@@ -308,6 +486,48 @@
             return text.toLowerCase().replace(/\s+/g, ' ').trim();
         }
 
+        // ===== Озвучка (Web Speech API) =====
+        function speakWord(text) {
+            if (!('speechSynthesis' in window)) {
+                console.warn('Озвучка не поддерживается в этом браузере');
+                return;
+            }
+
+            window.speechSynthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'el-GR';
+            utterance.rate = 0.85;
+            utterance.pitch = 1;
+            utterance.volume = 1;
+
+            const voices = window.speechSynthesis.getVoices();
+            const greekVoice = voices.find(v => v.lang.startsWith('el'));
+            if (greekVoice) {
+                utterance.voice = greekVoice;
+            }
+
+            const btns = document.querySelectorAll('.speak-btn, .speak-btn-small');
+            btns.forEach(b => b.classList.add('playing'));
+
+            utterance.onend = () => {
+                btns.forEach(b => b.classList.remove('playing'));
+            };
+            utterance.onerror = () => {
+                btns.forEach(b => b.classList.remove('playing'));
+            };
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Инициализация голосов
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.getVoices();
+            window.speechSynthesis.onvoiceschanged = () => {
+                window.speechSynthesis.getVoices();
+            };
+        }
+
         async function loadWords() {
             try {
                 const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Лист1?key=${API_KEY}`);
@@ -370,18 +590,15 @@
             
             const cards = [];
             
-            // to_learn — 2 карточки
             words.filter(w => w.status === 'to_learn').forEach(word => {
                 cards.push({ wordId: word.id, term: word.term, definition: word.definition, status: 'to_learn' });
                 cards.push({ wordId: word.id, term: word.term, definition: word.definition, status: 'to_learn' });
             });
             
-            // to_check — 1 карточка
             words.filter(w => w.status === 'to_check').forEach(word => {
                 cards.push({ wordId: word.id, term: word.term, definition: word.definition, status: 'to_check' });
             });
             
-            // остальные с next_review сегодня
             const otherToday = words.filter(w => 
                 !['to_learn', 'to_check'].includes(w.status) && 
                 w.next_review === today
@@ -423,14 +640,11 @@
                 next_review: nextReview
             });
 
-            // ПЕРЕЗАГРУЖАЕМ ВСЕ КАРТОЧКИ
             await refreshTodayCards();
             
-            // Если карточек нет — показываем "На сегодня всё"
             if (todayCards.length === 0) {
                 showNoWords();
             } else {
-                // Начинаем с первой карточки
                 currentCardIndex = 0;
                 showQuestion();
             }
@@ -444,41 +658,33 @@
                 next_review: today
             });
             
-            // ПЕРЕЗАГРУЖАЕМ ВСЕ КАРТОЧКИ
             await refreshTodayCards();
             
-            // Если карточек нет — показываем "На сегодня всё"
             if (todayCards.length === 0) {
                 showNoWords();
             } else {
-                // Начинаем с первой карточки
                 currentCardIndex = 0;
                 showQuestion();
             }
         }
 
         async function refreshTodayCards() {
-            // Обновляем статусы новых слов
             await updateDailyWords();
             
-            // Заново формируем карточки на сегодня
             const words = await loadWords();
             const today = getTodayString();
             
             const newCards = [];
             
-            // to_learn — 2 карточки
             words.filter(w => w.status === 'to_learn').forEach(word => {
                 newCards.push({ wordId: word.id, term: word.term, definition: word.definition, status: 'to_learn' });
                 newCards.push({ wordId: word.id, term: word.term, definition: word.definition, status: 'to_learn' });
             });
             
-            // to_check — 1 карточка
             words.filter(w => w.status === 'to_check').forEach(word => {
                 newCards.push({ wordId: word.id, term: word.term, definition: word.definition, status: 'to_check' });
             });
             
-            // остальные с next_review сегодня
             const otherToday = words.filter(w => 
                 !['to_learn', 'to_check'].includes(w.status) && 
                 w.next_review === today
@@ -503,8 +709,19 @@
             
             document.getElementById('direction-badge').textContent = 
                 currentDirection === 'term_to_def' ? 'Ελληνικά - Русский' : 'Русский - Ελληνικά';
-            document.getElementById('prompt').textContent = 
-                currentDirection === 'term_to_def' ? card.term : card.definition;
+            
+            const promptText = currentDirection === 'term_to_def' ? card.term : card.definition;
+            document.getElementById('prompt').textContent = promptText;
+            
+            // Кнопка "прослушать" всегда озвучивает греческий термин
+            const speakBtn = document.getElementById('speak-btn');
+            speakBtn.onclick = () => speakWord(card.term);
+            
+            // Авто-озвучка только для направления "греческий → русский"
+            const audioToggle = document.getElementById('audio-toggle');
+            if (audioToggle && audioToggle.checked && currentDirection === 'term_to_def') {
+                setTimeout(() => speakWord(card.term), 250);
+            }
             
             document.getElementById('question-block').classList.remove('hidden');
             document.getElementById('result-block').classList.add('hidden');
@@ -536,9 +753,12 @@
             document.getElementById('user-answer').innerHTML = `<strong>Твой ответ:</strong> ${userAnswer}`;
             document.getElementById('correct-answer').innerHTML = `<strong>Правильный ответ:</strong> ${correctAnswer}`;
             
+            // Кнопка 🔊 рядом с правильным ответом
+            const speakAnswerBtn = document.getElementById('speak-answer-btn');
+            speakAnswerBtn.onclick = () => speakWord(card.term);
+            
             document.getElementById('progress-info').textContent = `Осталось карточек: ${todayCards.length - currentCardIndex - 1}`;
             
-            // Сохраняем информацию о последнем ответе
             lastAnswer = { 
                 card, 
                 direction: currentDirection, 
@@ -586,6 +806,13 @@
             const card = todayCards[currentCardIndex];
             const correctAnswer = currentDirection === 'term_to_def' ? card.definition : card.term;
             
+            // Озвучка греческого термина ТОЛЬКО если направление "русский → греческий"
+            // (при "греческий → русский" термин уже озвучивался при показе)
+            const audioToggle = document.getElementById('audio-toggle');
+            if (audioToggle && audioToggle.checked && currentDirection === 'def_to_term') {
+                speakWord(card.term);
+            }
+            
             if (cleanText(userAnswer) === cleanText(correctAnswer)) {
                 showResult(true, userAnswer, correctAnswer);
             } else {
@@ -608,7 +835,6 @@
                 }
                 lastAnswer = null;
             } else {
-                // Если нет сохранённого ответа (например, при пропуске)
                 if (todayCards.length > 0) {
                     if (currentCardIndex >= todayCards.length) currentCardIndex = 0;
                     showQuestion();
@@ -620,10 +846,19 @@
 
         document.getElementById('fix-btn').addEventListener('click', async () => {
             if (lastAnswer) {
-                // Принудительно считаем ответ правильным
                 await handleCorrectAnswer(lastAnswer.card);
                 lastAnswer = null;
             }
+        });
+
+        // Сохранение состояния переключателя авто-озвучки
+        const audioToggleEl = document.getElementById('audio-toggle');
+        const savedAudioState = localStorage.getItem('autoAudioEnabled');
+        if (savedAudioState !== null) {
+            audioToggleEl.checked = savedAudioState === 'true';
+        }
+        audioToggleEl.addEventListener('change', () => {
+            localStorage.setItem('autoAudioEnabled', audioToggleEl.checked);
         });
 
         // Запуск
