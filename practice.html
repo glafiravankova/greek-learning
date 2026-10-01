@@ -60,119 +60,12 @@
             margin-bottom: 1rem;
             font-size: 1rem;
         }
-
-        /* ===== Переключатель авто-озвучки ===== */
-        .direction-row {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 1rem;
-        }
-
-        .direction-row .direction-badge {
-            margin: 0;
-        }
-
-        .audio-toggle {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .audio-toggle input {
-            display: none;
-        }
-
-        .audio-toggle-slider {
-            position: relative;
-            width: 42px;
-            height: 24px;
-            background: #f0e6d6;
-            border-radius: 12px;
-            transition: background 0.3s ease;
-        }
-
-        .audio-toggle-slider::before {
-            content: '';
-            position: absolute;
-            width: 18px;
-            height: 18px;
-            background: white;
-            border-radius: 50%;
-            top: 3px;
-            left: 3px;
-            transition: transform 0.3s ease;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        .audio-toggle input:checked + .audio-toggle-slider {
-            background: #a05252;
-        }
-
-        .audio-toggle input:checked + .audio-toggle-slider::before {
-            transform: translateX(18px);
-        }
-
-        .audio-toggle i {
-            color: #8b4513;
-            font-size: 1rem;
-            opacity: 0.5;
-            transition: opacity 0.3s ease;
-        }
-
-        .audio-toggle input:checked ~ i {
-            opacity: 1;
-        }
-
-        /* Обёртка вокруг слова с кнопкой 🔊 */
-        .practice-prompt-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin: 2rem 0;
-        }
-
-        .practice-prompt-wrapper .practice-prompt {
-            flex: 1;
-            margin: 0;
-        }
-
-        .speak-btn {
-            background: #f9f3ec;
-            color: #8b4513;
-            border: 2px solid #f0e6d6;
-            border-radius: 50%;
-            width: 55px;
-            height: 55px;
-            font-size: 1.4rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .speak-btn:hover {
-            background: #f0e6d6;
-            border-color: #a05252;
-            transform: scale(1.08);
-        }
-
-        .speak-btn.playing {
-            background: #a05252;
-            color: white;
-            border-color: #8b4513;
-        }
         
         .note-hint {
             text-align: center;
             color: #888;
             font-size: 0.9rem;
-            margin: 0.5rem 0;
+            margin: 0.5rem 0 0 0;
             font-style: italic;
         }
 
@@ -219,47 +112,7 @@
             background: #e8f5e9;
         }
 
-        /* Строка с правильным ответом и кнопкой озвучки */
-        .correct-answer-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 0.5rem 0;
-        }
-
-        .correct-answer-row .correct-answer {
-            flex: 1;
-            margin: 0;
-        }
-
-        .speak-btn-small {
-            background: #f9f3ec;
-            color: #8b4513;
-            border: 2px solid #f0e6d6;
-            border-radius: 50%;
-            width: 38px;
-            height: 38px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .speak-btn-small:hover {
-            background: #f0e6d6;
-            border-color: #a05252;
-            transform: scale(1.08);
-        }
-
-        .speak-btn-small.playing {
-            background: #a05252;
-            color: white;
-            border-color: #8b4513;
-        }
-
+        /* ===== Основные кнопки ===== */
         .btn {
             display: inline-block;
             background: #8b4513;
@@ -293,12 +146,75 @@
             color: #8b4513;
         }
 
+        /* ===== Группа кнопок с аудио ===== */
         .button-group {
             display: flex;
             gap: 1rem;
             justify-content: center;
+            align-items: stretch;
             flex-wrap: wrap;
             margin: 1rem 0;
+        }
+
+        /* ===== Одна кнопка, разделённая пополам ===== */
+        .audio-split-btn {
+            display: flex;
+            border: 1px solid #f0e6d6;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #f9f3ec;
+            transition: all 0.3s ease;
+        }
+
+        .audio-split-btn .audio-half {
+            background: #f9f3ec;
+            color: #8b4513;
+            border: none;
+            padding: 12px 18px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+            font-family: 'Georgia', serif;
+        }
+
+        .audio-split-btn .audio-half:first-child {
+            border-right: 1px solid #f0e6d6;
+        }
+
+        .audio-split-btn .audio-half:hover {
+            background: #f0e6d6;
+            color: #a05252;
+        }
+
+        .audio-split-btn .audio-half.playing {
+            background: #a05252;
+            color: white;
+        }
+
+        .audio-split-btn .audio-half.active {
+            background: #a05252;
+            color: white;
+        }
+
+        .audio-split-btn .audio-half.active:hover {
+            background: #8b4513;
+        }
+
+        /* Значок цикла в правой половине */
+        .audio-split-btn .audio-half .audio-loop {
+            position: absolute;
+            bottom: 3px;
+            right: 4px;
+            font-size: 0.5rem;
+            opacity: 0.6;
+        }
+
+        .audio-split-btn .audio-half.active .audio-loop {
+            opacity: 1;
         }
 
         .progress-info {
@@ -319,16 +235,26 @@
             display: none;
         }
 
-        @media (max-width: 480px) {
-            .speak-btn {
-                width: 48px;
-                height: 48px;
-                font-size: 1.2rem;
+        /* ===== Мобильная версия: кнопка под Проверить/Пропустить ===== */
+        @media (max-width: 600px) {
+            .button-group {
+                flex-direction: column;
+                align-items: stretch;
             }
-            .speak-btn-small {
-                width: 34px;
-                height: 34px;
-                font-size: 0.9rem;
+
+            .btn {
+                width: 100%;
+                margin: 0.25rem 0;
+            }
+
+            .audio-split-btn {
+                width: 100%;
+                margin: 0.25rem 0;
+            }
+
+            .audio-split-btn .audio-half {
+                flex: 1;
+                padding: 14px;
             }
         }
     </style>
@@ -361,25 +287,22 @@
         <div id="practice-container" class="practice-container hidden">
             <!-- Блок вопроса -->
             <div id="question-block">
-                <div class="direction-row">
-                    <div class="direction-badge" id="direction-badge"></div>
-                    <label class="audio-toggle" title="Автоматическая озвучка">
-                        <input type="checkbox" id="audio-toggle" checked>
-                        <span class="audio-toggle-slider"></span>
-                        <i class="fas fa-volume-up"></i>
-                    </label>
-                </div>
-                <div class="practice-prompt-wrapper">
-                    <div class="practice-prompt" id="prompt"></div>
-                    <button type="button" id="speak-btn" class="speak-btn" title="Прослушать">
-                        <i class="fas fa-volume-up"></i>
-                    </button>
-                </div>
+                <div class="direction-badge" id="direction-badge"></div>
+                <div class="practice-prompt" id="prompt"></div>
                 <form id="answer-form">
                     <input type="text" id="answer-input" class="practice-input" placeholder="Твой ответ..." autofocus required>
                     <div class="button-group">
                         <button type="submit" class="btn">Проверить</button>
                         <button type="button" id="skip-btn" class="btn btn-secondary">Пропустить</button>
+                        <div class="audio-split-btn">
+                            <button type="button" id="speak-btn" class="audio-half" title="Прослушать слово">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                            <button type="button" id="auto-audio-btn" class="audio-half" title="Автоматическая озвучка">
+                                <i class="fas fa-volume-up"></i>
+                                <i class="fas fa-sync-alt audio-loop"></i>
+                            </button>
+                        </div>
                     </div>
                 </form>
                 <div class="note-hint">
@@ -394,15 +317,19 @@
                 <div class="answer-comparison">
                     <div id="prompt-word" class="prompt-word"></div>
                     <div id="user-answer" class="user-answer"></div>
-                    <div class="correct-answer-row">
-                        <div id="correct-answer" class="correct-answer"></div>
-                        <button type="button" id="speak-answer-btn" class="speak-btn-small" title="Прослушать">
-                            <i class="fas fa-volume-up"></i>
-                        </button>
-                    </div>
+                    <div id="correct-answer" class="correct-answer"></div>
                 </div>
                 <div class="button-group">
                     <button id="continue-btn" class="btn">Продолжить</button>
+                    <div class="audio-split-btn">
+                        <button type="button" id="speak-btn-result" class="audio-half" title="Прослушать слово">
+                            <i class="fas fa-volume-up"></i>
+                        </button>
+                        <button type="button" id="auto-audio-btn-result" class="audio-half" title="Автоматическая озвучка">
+                            <i class="fas fa-volume-up"></i>
+                            <i class="fas fa-sync-alt audio-loop"></i>
+                        </button>
+                    </div>
                 </div>
                 <div id="fix-button-container" class="button-group hidden">
                     <button id="fix-btn" class="btn btn-secondary">
@@ -411,16 +338,16 @@
                 </div>
                 <div id="progress-info" class="progress-info"></div>
             </div>
+        </div>
 
-            <!-- Блок "На сегодня всё" -->
-            <div id="no-words-block" class="practice-container hidden" style="text-align: center;">
-                <i class="fas fa-check-circle" style="font-size: 4rem; color: #a05252; margin-bottom: 1rem;"></i>
-                <h2>На сегодня все!</h2>
-                <p style="margin: 1rem 0; color: #666;">На сегодня нет слов для повторения. Отдохни.</p>
-                <div class="button-group">
-                    <a href="dashboard.html" class="btn btn-secondary">На главную</a>
-                    <a href="add.html" class="btn">Добавить слова</a>
-                </div>
+        <!-- Блок "На сегодня всё" -->
+        <div id="no-words-block" class="practice-container hidden" style="text-align: center;">
+            <i class="fas fa-check-circle" style="font-size: 4rem; color: #a05252; margin-bottom: 1rem;"></i>
+            <h2>На сегодня все!</h2>
+            <p style="margin: 1rem 0; color: #666;">На сегодня нет слов для повторения. Отдохни.</p>
+            <div class="button-group">
+                <a href="dashboard.html" class="btn btn-secondary">На главную</a>
+                <a href="add.html" class="btn">Добавить слова</a>
             </div>
         </div>
     </main>
@@ -459,6 +386,9 @@
         let currentCardIndex = 0;
         let currentDirection = '';
         let lastAnswer = null;
+
+        // Состояние авто-озвучки
+        let autoAudioEnabled = localStorage.getItem('autoAudioEnabled') !== 'false';
 
         function getTodayString() {
             const today = new Date();
@@ -507,7 +437,8 @@
                 utterance.voice = greekVoice;
             }
 
-            const btns = document.querySelectorAll('.speak-btn, .speak-btn-small');
+            // Подсветка обеих кнопок "прослушать"
+            const btns = document.querySelectorAll('#speak-btn, #speak-btn-result');
             btns.forEach(b => b.classList.add('playing'));
 
             utterance.onend = () => {
@@ -526,6 +457,51 @@
             window.speechSynthesis.onvoiceschanged = () => {
                 window.speechSynthesis.getVoices();
             };
+        }
+
+        // ===== Настройка кнопок озвучки =====
+        function setupAudioButtons() {
+            const speakBtns = [
+                document.getElementById('speak-btn'),
+                document.getElementById('speak-btn-result')
+            ];
+            const autoBtns = [
+                document.getElementById('auto-audio-btn'),
+                document.getElementById('auto-audio-btn-result')
+            ];
+
+            // Обновить визуальное состояние всех кнопок авто-озвучки
+            function updateAutoBtns() {
+                autoBtns.forEach(btn => {
+                    if (!btn) return;
+                    if (autoAudioEnabled) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+            }
+            updateAutoBtns();
+
+            // Кнопка "прослушать" — озвучивает текущее слово
+            speakBtns.forEach(btn => {
+                if (!btn) return;
+                btn.addEventListener('click', () => {
+                    if (todayCards.length > 0 && todayCards[currentCardIndex]) {
+                        speakWord(todayCards[currentCardIndex].term);
+                    }
+                });
+            });
+
+            // Кнопка авто-озвучки — переключает состояние
+            autoBtns.forEach(btn => {
+                if (!btn) return;
+                btn.addEventListener('click', () => {
+                    autoAudioEnabled = !autoAudioEnabled;
+                    localStorage.setItem('autoAudioEnabled', autoAudioEnabled);
+                    updateAutoBtns();
+                });
+            });
         }
 
         async function loadWords() {
@@ -713,13 +689,8 @@
             const promptText = currentDirection === 'term_to_def' ? card.term : card.definition;
             document.getElementById('prompt').textContent = promptText;
             
-            // Кнопка "прослушать" всегда озвучивает греческий термин
-            const speakBtn = document.getElementById('speak-btn');
-            speakBtn.onclick = () => speakWord(card.term);
-            
-            // Авто-озвучка только для направления "греческий → русский"
-            const audioToggle = document.getElementById('audio-toggle');
-            if (audioToggle && audioToggle.checked && currentDirection === 'term_to_def') {
+            // Авто-озвучка: только "греческий → русский" и если включена
+            if (autoAudioEnabled && currentDirection === 'term_to_def') {
                 setTimeout(() => speakWord(card.term), 250);
             }
             
@@ -753,10 +724,6 @@
             document.getElementById('user-answer').innerHTML = `<strong>Твой ответ:</strong> ${userAnswer}`;
             document.getElementById('correct-answer').innerHTML = `<strong>Правильный ответ:</strong> ${correctAnswer}`;
             
-            // Кнопка 🔊 рядом с правильным ответом
-            const speakAnswerBtn = document.getElementById('speak-answer-btn');
-            speakAnswerBtn.onclick = () => speakWord(card.term);
-            
             document.getElementById('progress-info').textContent = `Осталось карточек: ${todayCards.length - currentCardIndex - 1}`;
             
             lastAnswer = { 
@@ -786,6 +753,8 @@
             document.getElementById('loading').classList.remove('hidden');
             document.getElementById('practice-container').classList.add('hidden');
             
+            setupAudioButtons();
+            
             todayCards = await prepareTodayCards();
             
             document.getElementById('loading').classList.add('hidden');
@@ -807,9 +776,7 @@
             const correctAnswer = currentDirection === 'term_to_def' ? card.definition : card.term;
             
             // Озвучка греческого термина ТОЛЬКО если направление "русский → греческий"
-            // (при "греческий → русский" термин уже озвучивался при показе)
-            const audioToggle = document.getElementById('audio-toggle');
-            if (audioToggle && audioToggle.checked && currentDirection === 'def_to_term') {
+            if (autoAudioEnabled && currentDirection === 'def_to_term') {
                 speakWord(card.term);
             }
             
@@ -849,16 +816,6 @@
                 await handleCorrectAnswer(lastAnswer.card);
                 lastAnswer = null;
             }
-        });
-
-        // Сохранение состояния переключателя авто-озвучки
-        const audioToggleEl = document.getElementById('audio-toggle');
-        const savedAudioState = localStorage.getItem('autoAudioEnabled');
-        if (savedAudioState !== null) {
-            audioToggleEl.checked = savedAudioState === 'true';
-        }
-        audioToggleEl.addEventListener('change', () => {
-            localStorage.setItem('autoAudioEnabled', audioToggleEl.checked);
         });
 
         // Запуск
