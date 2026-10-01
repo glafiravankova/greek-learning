@@ -287,6 +287,34 @@
             color: #666;
         }
 
+        /* ===== Кнопка озвучки в строке таблицы ===== */
+        .row-speak-btn {
+            background: #f9f3ec;
+            color: #8b4513;
+            border: 1px solid #f0e6d6;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            padding: 0;
+        }
+
+        .row-speak-btn:hover {
+            background: #f0e6d6;
+            color: #a05252;
+            transform: scale(1.1);
+        }
+
+        .row-speak-btn:active {
+            background: #8b4513;
+            color: white;
+        }
+
         .today-empty {
             text-align: center;
             padding: 30px 20px;
@@ -382,27 +410,27 @@
         </h1>
         
         <!-- Мини-дашборд -->
-                <div class="mini-stats">
-                    <div class="mini-stat">
-                        <div class="mini-stat-icon">
-                            <i class="fas fa-layer-group"></i>
-                        </div>
-                        <div class="mini-stat-content">
-                            <div class="mini-stat-label">Карточек сегодня</div>
-                            <div class="mini-stat-value" id="cards-count">0</div>
-                        </div>
-                    </div>
-                    
-                    <div class="mini-stat">
-                        <div class="mini-stat-icon">
-                            <i class="fas fa-font"></i>
-                        </div>
-                        <div class="mini-stat-content">
-                            <div class="mini-stat-label">Слов в словаре</div>
-                            <div class="mini-stat-value" id="words-count">0</div>
-                        </div>
-                    </div>
+        <div class="mini-stats">
+            <div class="mini-stat">
+                <div class="mini-stat-icon">
+                    <i class="fas fa-layer-group"></i>
                 </div>
+                <div class="mini-stat-content">
+                    <div class="mini-stat-label">Карточек сегодня</div>
+                    <div class="mini-stat-value" id="cards-count">0</div>
+                </div>
+            </div>
+            
+            <div class="mini-stat">
+                <div class="mini-stat-icon">
+                    <i class="fas fa-font"></i>
+                </div>
+                <div class="mini-stat-content">
+                    <div class="mini-stat-label">Слов в словаре</div>
+                    <div class="mini-stat-value" id="words-count">0</div>
+                </div>
+            </div>
+        </div>
         
         <!-- Таблица слов на сегодня -->
         <h2 class="section-title">
@@ -442,6 +470,38 @@
             const month = String(today.getMonth() + 1).padStart(2, '0');
             const day = String(today.getDate()).padStart(2, '0');
             return `${year}-${month}-${day}`;
+        }
+
+        // ===== Озвучка (Web Speech API) =====
+        function speakWord(text) {
+            if (!('speechSynthesis' in window)) {
+                console.warn('Озвучка не поддерживается в этом браузере');
+                return;
+            }
+
+            window.speechSynthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'el-GR';
+            utterance.rate = 0.85;
+            utterance.pitch = 1;
+            utterance.volume = 1;
+
+            const voices = window.speechSynthesis.getVoices();
+            const greekVoice = voices.find(v => v.lang.startsWith('el'));
+            if (greekVoice) {
+                utterance.voice = greekVoice;
+            }
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Инициализация голосов
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.getVoices();
+            window.speechSynthesis.onvoiceschanged = () => {
+                window.speechSynthesis.getVoices();
+            };
         }
 
         // Загрузить все слова из Лист1
@@ -542,12 +602,23 @@
             
             let html = '<table>';
             html += '<thead><tr>';
-            html += '<th><i class="fas fa-heading"></i> Термин </th>';
+            html += '<th style="width: 50px;"></th>';
+            html += '<th><i class="fas fa-heading"></i> Термин</th>';
             html += '<th><i class="fas fa-language"></i> Определение</th>';
             html += '</tr></thead><tbody>';
             
             todayWords.forEach(word => {
+                // Экранируем кавычки и апострофы в term для безопасной передачи в onclick
+                const safeTerm = (word.term || '')
+                    .replace(/\\/g, '\\\\')
+                    .replace(/'/g, "\\'")
+                    .replace(/"/g, '&quot;');
                 html += '<tr>';
+                html += `<td style="text-align: center;">
+                            <button type="button" class="row-speak-btn" onclick="speakWord('${safeTerm}')" title="Прослушать">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                         </td>`;
                 html += `<td><strong>${word.term || ''}</strong></td>`;
                 html += `<td>${word.definition || ''}</td>`;
                 html += '</tr>';
