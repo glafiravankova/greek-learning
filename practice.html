@@ -130,7 +130,7 @@
             background: #8b4513;
             color: white;
             padding: 12px 20px;
-            border: none;
+            border: 1px solid #8b4513;
             border-radius: 8px;
             font-size: 1rem;
             font-weight: 500;
@@ -146,6 +146,7 @@
 
         .btn:hover {
             background: #a05252;
+            border-color: #a05252;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(139, 69, 19, 0.2);
         }
@@ -234,7 +235,24 @@
             display: none;
         }
 
-        /* ===== Мобильная версия: все три кнопки в столбик ===== */
+        /* ===== Группа кнопок результата: вертикально ===== */
+        .result-button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: stretch;
+            margin: 1rem 0;
+        }
+
+        .result-button-group .btn,
+        .result-button-group .audio-split-btn {
+            width: 100%;
+            flex: 0 0 auto;
+            min-height: 48px;
+            margin: 0;
+        }
+
+        /* ===== Мобильная версия ===== */
         @media (max-width: 600px) {
             .button-group {
                 flex-direction: column;
@@ -298,10 +316,12 @@
                         <button type="submit" class="btn">Проверить</button>
                         <button type="button" id="skip-btn" class="btn btn-secondary">Пропустить</button>
                         <div class="audio-split-btn">
-                            <button type="button" id="speak-btn" class="audio-half" title="Прослушать слово">
+                            <!-- Левая половина: включает/выключает авто-озвучку -->
+                            <button type="button" id="auto-audio-btn" class="audio-half" title="Автоматическая озвучка">
                                 <i class="fas fa-volume-up"></i>
                             </button>
-                            <button type="button" id="auto-audio-btn" class="audio-half" title="Автоматическая озвучка">
+                            <!-- Правая половина: прослушать слово -->
+                            <button type="button" id="speak-btn" class="audio-half" title="Прослушать слово">
                                 <i class="fas fa-sync-alt"></i>
                             </button>
                         </div>
@@ -321,21 +341,21 @@
                     <div id="user-answer" class="user-answer"></div>
                     <div id="correct-answer" class="correct-answer"></div>
                 </div>
-                <div class="button-group">
+                <div class="result-button-group">
                     <button id="continue-btn" class="btn">Продолжить</button>
+                    <div id="fix-button-container" class="hidden" style="display: contents;">
+                        <button id="fix-btn" class="btn btn-secondary">
+                            <i class="fas fa-check"></i> Я ответил правильно
+                        </button>
+                    </div>
                     <div class="audio-split-btn">
-                        <button type="button" id="speak-btn-result" class="audio-half" title="Прослушать слово">
+                        <button type="button" id="auto-audio-btn-result" class="audio-half" title="Автоматическая озвучка">
                             <i class="fas fa-volume-up"></i>
                         </button>
-                        <button type="button" id="auto-audio-btn-result" class="audio-half" title="Автоматическая озвучка">
+                        <button type="button" id="speak-btn-result" class="audio-half" title="Прослушать слово">
                             <i class="fas fa-sync-alt"></i>
                         </button>
                     </div>
-                </div>
-                <div id="fix-button-container" class="button-group hidden">
-                    <button id="fix-btn" class="btn btn-secondary">
-                        <i class="fas fa-check"></i> Я ответил правильно
-                    </button>
                 </div>
                 <div id="progress-info" class="progress-info"></div>
             </div>
@@ -438,6 +458,7 @@
                 utterance.voice = greekVoice;
             }
 
+            // Подсветка кнопки "прослушать" (правая половина)
             const btns = document.querySelectorAll('#speak-btn, #speak-btn-result');
             btns.forEach(b => b.classList.add('playing'));
 
@@ -482,6 +503,7 @@
             }
             updateAutoBtns();
 
+            // Кнопки "прослушать" (правая половина, иконка ⟳)
             speakBtns.forEach(btn => {
                 if (!btn) return;
                 btn.addEventListener('click', () => {
@@ -491,6 +513,7 @@
                 });
             });
 
+            // Кнопки авто-озвучки (левая половина, иконка 🔊)
             autoBtns.forEach(btn => {
                 if (!btn) return;
                 btn.addEventListener('click', () => {
