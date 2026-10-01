@@ -112,12 +112,24 @@
             background: #e8f5e9;
         }
 
+        /* ===== Группа кнопок ===== */
+        .button-group {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            align-items: stretch;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+        }
+
         /* ===== Основные кнопки ===== */
         .btn {
-            display: inline-block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             background: #8b4513;
             color: white;
-            padding: 12px 30px;
+            padding: 12px 20px;
             border: none;
             border-radius: 8px;
             font-size: 1rem;
@@ -126,7 +138,10 @@
             transition: all 0.3s ease;
             font-family: 'Georgia', serif;
             text-decoration: none;
-            margin: 0.5rem;
+            box-sizing: border-box;
+            min-height: 48px;
+            flex: 1 1 0;
+            min-width: 120px;
         }
 
         .btn:hover {
@@ -146,16 +161,6 @@
             color: #8b4513;
         }
 
-        /* ===== Группа кнопок с аудио ===== */
-        .button-group {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            align-items: stretch;
-            flex-wrap: wrap;
-            margin: 1rem 0;
-        }
-
         /* ===== Одна кнопка, разделённая пополам ===== */
         .audio-split-btn {
             display: flex;
@@ -164,21 +169,28 @@
             overflow: hidden;
             background: #f9f3ec;
             transition: all 0.3s ease;
+            box-sizing: border-box;
+            min-height: 48px;
+            flex: 1 1 0;
+            min-width: 120px;
         }
 
         .audio-split-btn .audio-half {
             background: #f9f3ec;
             color: #8b4513;
             border: none;
-            padding: 12px 18px;
+            padding: 12px 20px;
             cursor: pointer;
-            font-size: 1.1rem;
+            font-size: 1rem;
+            font-weight: 500;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.3s ease;
-            position: relative;
             font-family: 'Georgia', serif;
+            line-height: 1;
+            flex: 1 1 0;
+            box-sizing: border-box;
         }
 
         .audio-split-btn .audio-half:first-child {
@@ -204,19 +216,6 @@
             background: #8b4513;
         }
 
-        /* Значок цикла в правой половине */
-        .audio-split-btn .audio-half .audio-loop {
-            position: absolute;
-            bottom: 3px;
-            right: 4px;
-            font-size: 0.5rem;
-            opacity: 0.6;
-        }
-
-        .audio-split-btn .audio-half.active .audio-loop {
-            opacity: 1;
-        }
-
         .progress-info {
             text-align: center;
             color: #666;
@@ -235,26 +234,30 @@
             display: none;
         }
 
-        /* ===== Мобильная версия: кнопка под Проверить/Пропустить ===== */
+        /* ===== Мобильная версия: все три кнопки в столбик ===== */
         @media (max-width: 600px) {
             .button-group {
                 flex-direction: column;
                 align-items: stretch;
+                gap: 0.5rem;
             }
 
             .btn {
                 width: 100%;
-                margin: 0.25rem 0;
+                margin: 0;
+                flex: 0 0 auto;
+                min-height: 48px;
             }
 
             .audio-split-btn {
                 width: 100%;
-                margin: 0.25rem 0;
+                margin: 0;
+                flex: 0 0 auto;
+                min-height: 48px;
             }
 
             .audio-split-btn .audio-half {
-                flex: 1;
-                padding: 14px;
+                padding: 12px 20px;
             }
         }
     </style>
@@ -299,8 +302,7 @@
                                 <i class="fas fa-volume-up"></i>
                             </button>
                             <button type="button" id="auto-audio-btn" class="audio-half" title="Автоматическая озвучка">
-                                <i class="fas fa-volume-up"></i>
-                                <i class="fas fa-sync-alt audio-loop"></i>
+                                <i class="fas fa-sync-alt"></i>
                             </button>
                         </div>
                     </div>
@@ -326,8 +328,7 @@
                             <i class="fas fa-volume-up"></i>
                         </button>
                         <button type="button" id="auto-audio-btn-result" class="audio-half" title="Автоматическая озвучка">
-                            <i class="fas fa-volume-up"></i>
-                            <i class="fas fa-sync-alt audio-loop"></i>
+                            <i class="fas fa-sync-alt"></i>
                         </button>
                     </div>
                 </div>
@@ -437,7 +438,6 @@
                 utterance.voice = greekVoice;
             }
 
-            // Подсветка обеих кнопок "прослушать"
             const btns = document.querySelectorAll('#speak-btn, #speak-btn-result');
             btns.forEach(b => b.classList.add('playing'));
 
@@ -470,7 +470,6 @@
                 document.getElementById('auto-audio-btn-result')
             ];
 
-            // Обновить визуальное состояние всех кнопок авто-озвучки
             function updateAutoBtns() {
                 autoBtns.forEach(btn => {
                     if (!btn) return;
@@ -483,7 +482,6 @@
             }
             updateAutoBtns();
 
-            // Кнопка "прослушать" — озвучивает текущее слово
             speakBtns.forEach(btn => {
                 if (!btn) return;
                 btn.addEventListener('click', () => {
@@ -493,7 +491,6 @@
                 });
             });
 
-            // Кнопка авто-озвучки — переключает состояние
             autoBtns.forEach(btn => {
                 if (!btn) return;
                 btn.addEventListener('click', () => {
@@ -689,7 +686,6 @@
             const promptText = currentDirection === 'term_to_def' ? card.term : card.definition;
             document.getElementById('prompt').textContent = promptText;
             
-            // Авто-озвучка: только "греческий → русский" и если включена
             if (autoAudioEnabled && currentDirection === 'term_to_def') {
                 setTimeout(() => speakWord(card.term), 250);
             }
@@ -775,7 +771,6 @@
             const card = todayCards[currentCardIndex];
             const correctAnswer = currentDirection === 'term_to_def' ? card.definition : card.term;
             
-            // Озвучка греческого термина ТОЛЬКО если направление "русский → греческий"
             if (autoAudioEnabled && currentDirection === 'def_to_term') {
                 speakWord(card.term);
             }
